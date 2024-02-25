@@ -1,6 +1,4 @@
-//variável perguntas
 const perguntas = [
-    //estrutura de perguntas criadas com o ChatGPT
      {
        pergunta: "O que significa 'DOM' em JavaScript?",
        respostas: [
@@ -93,59 +91,41 @@ const perguntas = [
      },
    ];
    
-   //objeto document - transforma tudo que tem no documento como um objeto JS - querySelector Função de Pesquisa - variável templete do HTML... '#quiz' = id='quiz'
-   
    const quiz = document.querySelector('#quiz')
-   const template = document.querySelector('template')
-   
-   // loop ou laço de repetição
-   //variável item - repete para cada item de pergunta 
-   //variável quizItem = cloneNode vai clonar o conteúdo do template (HTML)
-   
-   //New = Novo - Set (guarda a informação)
-   const corretas = new Set()
-   const totalDePerguntas = perguntas.length
-   //pesequisa id aceros o span (filho)
-   const mostrarTotal = document.querySelector('#acertos span')
-   mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas
-   
-   
-   for (const item of perguntas){
-   const quizItem = template.content.cloneNode(true)
-   //Mudar o título do item com o título da pergunta (pesquisa pelo H3) - item.pergunta (estrutura de perguntas criadas com o ChatGPT)
-   quizItem.querySelector('h3').textContent = item.pergunta
-   
-   
-   //para cada resposta - cada item vai rodar 3x (estrutura de perguntas criadas com o ChatGPT)
-   for(let resposta of item.respostas){
-     // dt = subitem (HTML) - Pesquisa dl e dt (dt (item) é filho de dl (lista)) - faz o clone
-     //Muda o conteúdo do span (HTML - Resposta A) = texto "resposta" variável número no loop
-     const dt = quizItem.querySelector('dl dt').cloneNode(true)
-     dt.querySelector('span').textContent = resposta
-     //indice = array {} - procura o índice do item - procura o indice de cada resposta (guarda o valor selecionado) - indice resposta =    dt.querySelector('input').setAttribute('name','pergunta' +  ou perguntas.indexOf(item))
-     dt.querySelector('input').setAttribute('name', 'pergunta-' + perguntas.indexOf(item))
-     dt.querySelector('input').value = item.respostas.indexOf(resposta)
-    //verificar se o valor correto está selecionado - verificar uma ação na tela - eventos da tela (evento de mudança de input) - onchange (ao mudar) exige uma função (=> = seta = função "arrow function") - guarda o indice da resposta e compara se ele esta correta - comparação = verdadeiro ou falso - comparação do valor selecionado com o texto da resposta - == compara sem considerar o tipo valor x  string
-    //fazer a soma das respostas corretas - quando clicar na correta e mudar de opção, caso encontre o item deleta
-     dt.querySelector('input').onchange = (evento) => { 
-       const estaCorreta = event.target.value == item.correta
-         corretas.delete(item)
-         if(estaCorreta) {
-           corretas.add(item)
-         }
-   
-         mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas
-   
-       }
-   //coloca no HTML codigo para criar o resultado no fim da tela do quizz
-   //variável não se coloca espaco, substitui o espaço pela próxima palavra iniciando em maiúsculo
-   //coloca na tela - pesquisa o dl (lista perguntas) e adiociona o filho dt (itens da lista)
-     quizItem.querySelector('dl').appendChild(dt)
-   }
-   //remove a "Resposta A" (HTML)
-   quizItem.querySelector('dl dt').remove()
-   
-   // coloca a pergunta na tela
-   quiz.appendChild(quizItem)
-     }
-   
+const template = document.querySelector('template')
+
+const corretas = new Set()
+const totalDePerguntas = perguntas.length
+const mostrarTotal = document.querySelector('#acertos span')
+mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas
+
+// loop ou laço de repetição
+for (const item of perguntas) {
+  const quizItem = template.content.cloneNode(true)
+  quizItem.querySelector('h3').textContent = item.pergunta
+
+  for (let resposta of item.respostas) {
+    const dt = quizItem.querySelector('dl dt').cloneNode(true)
+    dt.querySelector('span').textContent = resposta
+    dt.querySelector('input').setAttribute('name', 'pergunta-' + perguntas.indexOf(item))
+    dt.querySelector('input').value = item.respostas.indexOf(resposta)
+    dt.querySelector('input').onchange = (event) => {
+      const estaCorreta = event.target.value == item.correta
+
+      corretas.delete(item)
+      if (estaCorreta) {
+        corretas.add(item)
+      }
+
+      mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas
+    }
+    quizItem.querySelector('dl').appendChild(dt)
+  }
+
+
+  quizItem.querySelector('dl dt').remove()
+
+
+  // coloca a pergunta na tela
+  quiz.appendChild(quizItem)
+}
